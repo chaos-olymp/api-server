@@ -1,0 +1,6 @@
+name: "ApiServer"
+version: "${version}"
+author: "DeepRobin"
+description: "Restful API Server"
+main: "de.chaosolymp.apiserver.ApiServerPlugin"
+depends: ["LuckPerms"]
