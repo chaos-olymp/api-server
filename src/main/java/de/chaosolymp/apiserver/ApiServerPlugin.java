@@ -9,13 +9,11 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public final class ApiServerPlugin extends Plugin {
 
-    private final Map<String, Boolean> onlineServers = new HashMap<>();
+    private ServerPingHandler serverPingHandler;
     private final int port = 3010;
 
     @Override
@@ -28,7 +26,8 @@ public final class ApiServerPlugin extends Plugin {
             return;
         }
 
-        this.getProxy().getScheduler().schedule(this, () -> this.getProxy().getServers().forEach((key, value) -> value.ping((response, error) -> onlineServers.put(value.getName(), error != null))), 0, 2, TimeUnit.MINUTES);
+        this.serverPingHandler = new ServerPingHandler(this);
+        this.getProxy().getScheduler().schedule(this, this.serverPingHandler, 0, 2, TimeUnit.MINUTES);
         this.getLogger().info(String.format("HTTP Server listening on port :%d", this.port));
         this.getLogger().info(String.format("API Server warmup finished (Took %dms)", System.currentTimeMillis() - startTime));
     }
@@ -43,6 +42,6 @@ public final class ApiServerPlugin extends Plugin {
     }
 
     public boolean isServerOnline(ServerInfo info) {
-        return this.onlineServers.getOrDefault(info.getName(), false);
+        return this.serverPingHandler.onlineServers.getOrDefault(info.getName(), false);
     }
 }

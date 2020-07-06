@@ -11,7 +11,7 @@ Returns a json response with server information.
   {
     "internal-name": "survival",
     "name": "survival",
-    "motd": "?3Example MOTD",
+    "motd": "§3Example MOTD",
     "online": true
   }
 ]
@@ -26,7 +26,7 @@ Returns a json response with server information.
   {
     "name": "DeepRobin",
     "uuid": "375e2a8d-ab90-4601-adb1-23acafbd0c55",
-    "mods": ["minecraft:vanilla"],
+    "locale": "de-DE",
     "server": "survival",
     "ping": 12,
     "group": "developer"

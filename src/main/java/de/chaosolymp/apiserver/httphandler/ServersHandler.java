@@ -29,6 +29,7 @@ public final class ServersHandler implements HttpHandler {
             object.addProperty("name", value.getName());
             object.addProperty("motd", value.getMotd());
             object.addProperty("online", this.plugin.isServerOnline(value));
+            array.add(object);
         });
 
         final String response = this.gson.toJson(array);
