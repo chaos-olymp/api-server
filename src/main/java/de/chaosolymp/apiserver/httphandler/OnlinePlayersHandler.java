@@ -28,6 +28,7 @@ public final class OnlinePlayersHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        exchange.getResponseHeaders().add("Content-Type", "application/json");
         JsonArray array = new JsonArray();
         for(ProxiedPlayer player : this.plugin.getProxy().getPlayers()) {
             array.add(this.getPlayerObject(player));

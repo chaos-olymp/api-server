@@ -22,6 +22,7 @@ public final class ServersHandler implements HttpHandler {
 
     @Override
     public void handle(final HttpExchange exchange) throws IOException {
+        exchange.getResponseHeaders().add("Content-Type", "application/json");
         JsonArray array = new JsonArray();
         this.plugin.getProxy().getServers().forEach((key, value) -> {
             JsonObject object = new JsonObject();
