@@ -35,10 +35,10 @@ public final class OnlinePlayersHandler implements HttpHandler {
         this.plugin.getProxy().getPlayers().forEach(player -> array.add(this.getPlayerObject(player)));
 
         final String response = this.gson.toJson(array);
-
-        exchange.sendResponseHeaders(200, response.length());
+        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+        exchange.sendResponseHeaders(200, bytes.length);
         OutputStream os = exchange.getResponseBody();
-        os.write(response.getBytes(StandardCharsets.UTF_8));
+        os.write(bytes);
         os.close();
     }
 

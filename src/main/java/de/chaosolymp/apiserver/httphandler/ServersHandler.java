@@ -33,9 +33,10 @@ public final class ServersHandler implements HttpHandler {
         object.add("servers", array);
 
         final String response = this.gson.toJson(object);
-        exchange.sendResponseHeaders(200, response.length());
+        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+        exchange.sendResponseHeaders(200, bytes.length);
         OutputStream os = exchange.getResponseBody();
-        os.write(response.getBytes(StandardCharsets.UTF_8));
+        os.write(bytes);
         os.close();
     }
 
