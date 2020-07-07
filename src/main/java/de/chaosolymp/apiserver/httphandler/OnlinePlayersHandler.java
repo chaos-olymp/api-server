@@ -12,6 +12,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public final class OnlinePlayersHandler implements HttpHandler {
@@ -37,7 +38,7 @@ public final class OnlinePlayersHandler implements HttpHandler {
 
         exchange.sendResponseHeaders(200, response.length());
         OutputStream os = exchange.getResponseBody();
-        os.write(response.getBytes());
+        os.write(response.getBytes(StandardCharsets.UTF_8));
         os.close();
     }
 

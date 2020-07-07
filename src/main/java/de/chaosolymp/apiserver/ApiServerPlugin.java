@@ -1,11 +1,14 @@
 package de.chaosolymp.apiserver;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpServer;
 import de.chaosolymp.apiserver.httphandler.OnlinePlayersHandler;
 import de.chaosolymp.apiserver.httphandler.ServersHandler;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
+import net.md_5.bungee.protocol.ProtocolConstants;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -52,5 +55,9 @@ public final class ApiServerPlugin extends Plugin {
 
     public CachedServerPingHelper getServerPingHandler() {
         return this.cachedServerPingHelper;
+    }
+
+    public String getLatestSupportedVersion() {
+        return ProtocolConstants.SUPPORTED_VERSIONS.get(ProtocolConstants.SUPPORTED_VERSIONS.size() - 1);
     }
 }

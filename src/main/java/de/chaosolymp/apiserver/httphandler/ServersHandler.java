@@ -10,6 +10,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 public final class ServersHandler implements HttpHandler {
 
@@ -24,13 +25,17 @@ public final class ServersHandler implements HttpHandler {
     @Override
     public void handle(final HttpExchange exchange) throws IOException {
         exchange.getResponseHeaders().add("Content-Type", "application/json");
-        JsonArray array = new JsonArray();
-        this.plugin.getProxy().getServers().forEach((key, value) -> array.add(this.getServerObject(key, value)));
+        final JsonObject object = new JsonObject();
+        object.addProperty("latest-version", this.plugin.getLatestSupportedVersion());
 
-        final String response = this.gson.toJson(array);
+        final JsonArray array = new JsonArray();
+        this.plugin.getProxy().getServers().forEach((key, value) -> array.add(this.getServerObject(key, value)));
+        object.add("servers", array);
+
+        final String response = this.gson.toJson(object);
         exchange.sendResponseHeaders(200, response.length());
         OutputStream os = exchange.getResponseBody();
-        os.write(response.getBytes());
+        os.write(response.getBytes(StandardCharsets.UTF_8));
         os.close();
     }
 
