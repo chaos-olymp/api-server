@@ -10,7 +10,6 @@ import net.md_5.bungee.api.config.ServerInfo;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Map;
 
 public final class ServersHandler implements HttpHandler {
 
@@ -26,19 +25,22 @@ public final class ServersHandler implements HttpHandler {
     public void handle(final HttpExchange exchange) throws IOException {
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         JsonArray array = new JsonArray();
-        for(Map.Entry<String, ServerInfo> entry : this.plugin.getProxy().getServers().entrySet()) {
-            JsonObject object = new JsonObject();
-            object.addProperty("internal-name", entry.getKey());
-            object.addProperty("name", entry.getValue().getName());
-            object.addProperty("motd", entry.getValue().getMotd());
-            object.addProperty("online", this.plugin.isServerOnline(entry.getValue()));
-            array.add(object);
-        }
+        this.plugin.getProxy().getServers().forEach((key, value) -> array.add(this.getServerObject(key, value)));
 
         final String response = this.gson.toJson(array);
         exchange.sendResponseHeaders(200, response.length());
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
+    }
+
+    private JsonObject getServerObject(final String serverKey, final ServerInfo info) {
+        JsonObject object = new JsonObject();
+        object.addProperty("server-key", serverKey);
+        object.addProperty("name", info.getName());
+        object.addProperty("motd", info.getMotd());
+        object.addProperty("restricted", info.isRestricted());
+        object.addProperty("online", this.plugin.getServerPingHandler().isServerOnline(serverKey));
+        return object;
     }
 }

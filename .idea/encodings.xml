@@ -4,5 +4,9 @@
     <file url="file://$PROJECT_DIR$/.gitignore" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/README.md" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources/bungee.yml" charset="US-ASCII" />
+    <file url="jar://C:/Program Files/Java/jdk1.8.0_211/jre/lib/rt.jar!/com/sun/net/httpserver/spi/HttpServerProvider.class" charset="GBK" />
+    <file url="jar://C:/Program Files/Java/jdk1.8.0_211/jre/lib/rt.jar!/sun/net/httpserver/DefaultHttpServerProvider.class" charset="UTF-16LE" />
+    <file url="jar://C:/Program Files/Java/jdk1.8.0_211/jre/lib/rt.jar!/sun/net/httpserver/HttpServerImpl.class" charset="UTF-16BE" />
+    <file url="jar://C:/Program Files/Java/jdk1.8.0_211/jre/lib/rt.jar!/sun/net/httpserver/ServerImpl.class" charset="GBK" />
   </component>
 </project>

@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpServer;
 import de.chaosolymp.apiserver.httphandler.OnlinePlayersHandler;
 import de.chaosolymp.apiserver.httphandler.ServersHandler;
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,8 +13,11 @@ import java.util.concurrent.TimeUnit;
 
 public final class ApiServerPlugin extends Plugin {
 
-    private ServerPingHandler serverPingHandler;
+    private CachedServerPingHelper cachedServerPingHelper;
     private final int port = 3010;
+
+    private transient ScheduledTask task;
+    private transient HttpServer server;
 
     @Override
     public void onEnable() {
@@ -26,22 +29,28 @@ public final class ApiServerPlugin extends Plugin {
             return;
         }
 
-        this.serverPingHandler = new ServerPingHandler(this);
-        this.getProxy().getScheduler().schedule(this, this.serverPingHandler, 0, 2, TimeUnit.MINUTES);
+        this.cachedServerPingHelper = new CachedServerPingHelper(this);
+        this.task = this.getProxy().getScheduler().schedule(this, this.cachedServerPingHelper, 0, 2, TimeUnit.MINUTES);
         this.getLogger().info(String.format("HTTP Server listening on port :%d", this.port));
         this.getLogger().info(String.format("API Server warmup finished (Took %dms)", System.currentTimeMillis() - startTime));
     }
 
+    @Override
+    public void onDisable() {
+        this.server.stop(0);
+        this.task.cancel();
+    }
+
     private void startHttp() throws IOException {
-        final HttpServer server = HttpServer.create(new InetSocketAddress(this.port), 0);
+        this.server = HttpServer.create(new InetSocketAddress(this.port), 0);
         final Gson gson = new Gson();
         server.createContext("/players", new OnlinePlayersHandler(this, gson));
         server.createContext("/servers", new ServersHandler(this, gson));
-        server.setExecutor(null); // creates a default executor
+        server.setExecutor(new ScheduledExecutor(this));
         server.start();
     }
 
-    public boolean isServerOnline(ServerInfo info) {
-        return this.serverPingHandler.onlineServers.getOrDefault(info.getName(), false);
+    public CachedServerPingHelper getServerPingHandler() {
+        return this.cachedServerPingHelper;
     }
 }

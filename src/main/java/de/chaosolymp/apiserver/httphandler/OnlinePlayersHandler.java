@@ -30,11 +30,11 @@ public final class OnlinePlayersHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         JsonArray array = new JsonArray();
-        for(ProxiedPlayer player : this.plugin.getProxy().getPlayers()) {
-            array.add(this.getPlayerObject(player));
-        }
+
+        this.plugin.getProxy().getPlayers().forEach(player -> array.add(this.getPlayerObject(player)));
 
         final String response = this.gson.toJson(array);
+
         exchange.sendResponseHeaders(200, response.length());
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
