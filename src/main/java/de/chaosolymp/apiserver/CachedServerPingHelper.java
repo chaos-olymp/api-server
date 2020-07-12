@@ -25,9 +25,15 @@ public final class CachedServerPingHelper implements Runnable, Serializable {
         for (Map.Entry<String, ServerInfo> entry : this.plugin.getProxy().getServers().entrySet()) {
             entry.getValue().ping((result, error) -> {
                 if(error == null) {
-                    onlineServers.add(entry.getValue().getName());
+                    if(!onlineServers.contains(entry.getValue().getName())) {
+                        onlineServers.add(entry.getValue().getName());
+                        this.plugin.getLogger().info(String.format("%s is online.", entry.getValue().getName()));
+                    }
                 } else {
-                    onlineServers.remove(entry.getValue().getName());
+                    if(onlineServers.contains(entry.getValue().getName())) {
+                        onlineServers.remove(entry.getValue().getName());
+                        this.plugin.getLogger().info(String.format("%s is offline.", entry.getValue().getName()));
+                    }
                 }
             });
         }

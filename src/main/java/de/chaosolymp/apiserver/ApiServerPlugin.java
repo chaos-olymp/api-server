@@ -33,7 +33,7 @@ public final class ApiServerPlugin extends Plugin {
         }
 
         this.cachedServerPingHelper = new CachedServerPingHelper(this);
-        this.task = this.getProxy().getScheduler().schedule(this, this.cachedServerPingHelper, 0, 2, TimeUnit.MINUTES);
+        this.task = this.getProxy().getScheduler().schedule(this, this.cachedServerPingHelper, 0, 30, TimeUnit.SECONDS);
         this.getLogger().info(String.format("HTTP Server listening on port :%d", this.port));
         this.getLogger().info(String.format("API Server warmup finished (Took %dms)", System.currentTimeMillis() - startTime));
     }
