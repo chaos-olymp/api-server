@@ -1,14 +1,12 @@
 package de.chaosolymp.apiserver;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpServer;
+import de.chaosolymp.apiserver.httphandler.InfoHandler;
 import de.chaosolymp.apiserver.httphandler.OnlinePlayersHandler;
 import de.chaosolymp.apiserver.httphandler.ServersHandler;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
-import net.md_5.bungee.protocol.ProtocolConstants;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -17,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public final class ApiServerPlugin extends Plugin {
 
     private CachedServerPingHelper cachedServerPingHelper;
-    private final int port = 3010;
+    private final static int PORT = 3010;
 
     private transient ScheduledTask task;
     private transient HttpServer server;
@@ -34,7 +32,7 @@ public final class ApiServerPlugin extends Plugin {
 
         this.cachedServerPingHelper = new CachedServerPingHelper(this);
         this.task = this.getProxy().getScheduler().schedule(this, this.cachedServerPingHelper, 0, 30, TimeUnit.SECONDS);
-        this.getLogger().info(String.format("HTTP Server listening on port :%d", this.port));
+        this.getLogger().info(String.format("HTTP Server listening on port :%d", ApiServerPlugin.PORT));
         this.getLogger().info(String.format("API Server warmup finished (Took %dms)", System.currentTimeMillis() - startTime));
     }
 
@@ -45,8 +43,9 @@ public final class ApiServerPlugin extends Plugin {
     }
 
     private void startHttp() throws IOException {
-        this.server = HttpServer.create(new InetSocketAddress(this.port), 0);
+        this.server = HttpServer.create(new InetSocketAddress(ApiServerPlugin.PORT), 0);
         final Gson gson = new Gson();
+        server.createContext("/info", new InfoHandler(this, gson));
         server.createContext("/players", new OnlinePlayersHandler(this, gson));
         server.createContext("/servers", new ServersHandler(this, gson));
         server.setExecutor(new ScheduledExecutor(this));
@@ -55,9 +54,5 @@ public final class ApiServerPlugin extends Plugin {
 
     public CachedServerPingHelper getServerPingHandler() {
         return this.cachedServerPingHelper;
-    }
-
-    public String getLatestSupportedVersion() {
-        return ProtocolConstants.SUPPORTED_VERSIONS.get(ProtocolConstants.SUPPORTED_VERSIONS.size() - 1);
     }
 }

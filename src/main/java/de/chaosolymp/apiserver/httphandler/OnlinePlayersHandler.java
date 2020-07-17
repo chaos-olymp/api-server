@@ -49,6 +49,9 @@ public final class OnlinePlayersHandler implements HttpHandler {
         object.addProperty("locale", player.getLocale().getISO3Language());
         object.addProperty("server", player.getServer().getInfo().getName());
         object.addProperty("ping", player.getPing());
+        final JsonObject modList = new JsonObject();
+        player.getModList().forEach(modList::addProperty);
+        object.add("mods", modList);
         object.addProperty("group", Objects.requireNonNull(this.luckPerms.getUserManager().getUser(player.getUniqueId())).getPrimaryGroup());
         return object;
     }

@@ -2,6 +2,22 @@
 
 This is a BungeeCord which was especially developed for ChaosOlymp.DE to provide the website frontend with player and server information. It uses the Sun/Oracle http server library to start an HTTP server. The port is hardcoded to port `3010`, but I still recommend putting it behind a reverse proxy like [nginx](https://www.nginx.com/) or [haproxy](https://www.haproxy.com/) to ensure more security and professionalism.
 
+## `/info/`
+Returns a json response with general information.
+
+### Example
+```json
+[
+  {
+    "latest-version": "1.16.x",
+    "server-name": "BungeeCord",
+    "server-version": "BungeeCord 1.16-R0.2",
+    "online-count": 23,
+    "player-limit": 128
+  }
+]
+```
+
 ## `/servers/`
 Returns a json response with server information.
 
@@ -26,7 +42,7 @@ Returns a json response with server information.
   {
     "name": "DeepRobin",
     "uuid": "375e2a8d-ab90-4601-adb1-23acafbd0c55",
-    "locale": "de-DE",
+    "locale": "deu",
     "server": "survival",
     "ping": 12,
     "group": "developer"

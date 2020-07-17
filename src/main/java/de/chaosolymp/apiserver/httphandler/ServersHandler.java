@@ -26,7 +26,6 @@ public final class ServersHandler implements HttpHandler {
     public void handle(final HttpExchange exchange) throws IOException {
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         final JsonObject object = new JsonObject();
-        object.addProperty("latest-version", this.plugin.getLatestSupportedVersion());
 
         final JsonArray array = new JsonArray();
         this.plugin.getProxy().getServers().forEach((key, value) -> array.add(this.getServerObject(key, value)));
