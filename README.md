@@ -9,7 +9,10 @@ Returns a json response with general information.
 ```json
 [
   {
-    "latest-version": "1.16.x",
+    "latest-version": {
+      "name": "1.16.x",
+      "id": 736,
+    },
     "server-name": "BungeeCord",
     "server-version": "BungeeCord 1.16-R0.2",
     "online-count": 23,
